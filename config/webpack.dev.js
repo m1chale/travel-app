@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const htmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/website/index.js",
+  entry: "./src/client/index.js",
   mode: "development",
   devtool: "source-map",
   module: {
@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [
     new htmlWebpackPlugin({
-      template: "./src/website/index.html",
+      template: "./src/client/index.html",
       filename: "./index.html",
     }),
   ],
