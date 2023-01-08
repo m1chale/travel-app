@@ -6,7 +6,12 @@ module.exports = {
   entry: "./src/client/index.js",
   mode: "production",
   module: {
-    rules: [],
+    rules: [
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"],
+      },
+    ],
   },
   optimization: {},
   plugins: [

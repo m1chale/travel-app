@@ -7,7 +7,12 @@ module.exports = {
   mode: "development",
   devtool: "source-map",
   module: {
-    rules: [],
+    rules: [
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"],
+      },
+    ],
   },
   plugins: [
     new htmlWebpackPlugin({

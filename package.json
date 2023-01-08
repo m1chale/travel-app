@@ -25,7 +25,11 @@
         "webpack-cli": "^5.0.1"
     },
     "devDependencies": {
+        "css-loader": "^6.7.3",
+        "node-sass": "^8.0.0",
         "nodemon": "^2.0.20",
+        "sass-loader": "^13.2.0",
+        "style-loader": "^3.3.1",
         "webpack-dev-server": "^4.11.1"
     }
 }
