@@ -1,19 +1,14 @@
-# Template Project
+# Travel App
 
 ## Usage
 
-To use the template do the following steps:
-
-1. Copy the project folder
-2. Rename to your desired project-name
-3. Delete the .git folder
-4. Run: "git init"
-
-After running these steps you will have a fresh git repository without any history of the template.
+Just start the server and open up the index.html to run the app.
 
 ## Project description
 
-The Project consits of a single web page for entering data which can be fetch to and from a local express server.
+The App can be used to organize your next holday trip.
+It enables you to add different locations, a package list and the weather forecast.
+There is also a feature to export the data to an PDF file.
 
 ## Installation
 
