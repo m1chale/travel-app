@@ -58,7 +58,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Initialize the main project folder
-app.use(express.static("src/client"));
+app.use(express.static("dist"));
 
 // Setup Server
 app.listen(port, listening);
