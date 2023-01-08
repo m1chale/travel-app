@@ -1,3 +1,7 @@
+/*** Variables ***/
+$background-color: #dabfff;
+$primary-color: #2c2a4a;
+
 /*** General ***/
 * {
   padding: 0;
@@ -6,7 +10,7 @@
 
 body {
   font-family: "Italianno";
-  background: #dabfff;
+  background: $background-color;
 }
 
 /*** Layout ***/
@@ -23,7 +27,7 @@ body {
 
 header {
   grid-area: "header";
-  background: #2c2a4a;
+  background: $primary-color;
 }
 
 main {
