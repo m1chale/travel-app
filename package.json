@@ -5,7 +5,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build-prod": "webpack --config config/webpack.prod.js",
-        "build-dev": "webpack-dev-server --config config/webpack.dev.js",
+        "build-dev": "webpack-dev-server --config config/webpack.dev.js --open",
         "start": "node src/server/server.js",
         "mon": "nodemon src/server/server.js",
         "docu": "jsdoc -c config/jsdoc.conf.json -r ./"
