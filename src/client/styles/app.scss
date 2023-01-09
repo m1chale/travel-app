@@ -1,12 +1,24 @@
 /*** Variables ***/
 $background-color: #dabfff;
 $primary-color: #2c2a4a;
-$secondary-color: #7FDEFF;
-$background-dark-color: #4F518C;
-$field-background: #8D90EF;
+$secondary-color: #7fdeff;
+$background-dark-color: #4f518c;
+$field-background: #8d90ef;
+
+$primary-font: "Italianno";
+$secondary-font: "Jura";
 
 $form-input-text: 'input[type="text"], input[type="date"], input[type="button"]';
 
+/*** Mixins ***/
+@mixin input-theme {
+  font-size: 24px;
+  color: white;
+  background-color: $field-background;
+  font-family: $secondary-font;
+  border: none;
+  border-radius: 25px;
+}
 
 /*** General ***/
 * {
@@ -15,7 +27,7 @@ $form-input-text: 'input[type="text"], input[type="date"], input[type="button"]'
 }
 
 body {
-  font-family: "Italianno";
+  font-family: $primary-font;
   font-size: 64px;
   color: white;
   background: $background-color;
@@ -31,37 +43,37 @@ body {
     "header"
     "main"
     "footer";
-}
 
-header {
-  grid-area: "header";
-  background: $primary-color;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between
-}
+  header {
+    grid-area: "header";
+    background: $primary-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-main {
-  grid-area: "main";
-  display: flex;
-  flex-direction: column;
-  padding: 50px;
-}
+  main {
+    grid-area: "main";
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+  }
 
-footer {
-  background: $primary-color;
-  color: $secondary-color;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  font-size: 30px;
+  footer {
+    background: $primary-color;
+    color: $secondary-color;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+  }
 }
 
 /*** Header ***/
 
-h1 { 
+h1 {
   font-size: 128px;
   color: $secondary-color;
   font-weight: normal;
@@ -72,7 +84,7 @@ nav {
   display: flex;
   gap: 60px;
 
-  a{
+  a {
     font-size: 75px;
     color: white;
     text-decoration: none;
@@ -85,6 +97,11 @@ nav {
   background: $background-dark-color;
   border-radius: 25px;
   padding: 30px;
+
+  h2 {
+    font-size: 75px;
+    font-weight: normal;
+  }
 }
 
 .input-form {
@@ -92,59 +109,39 @@ nav {
   flex-direction: column;
   gap: 30px;
   align-items: flex-start;
-}
 
-.row {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
-}
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+  }
 
-.field-wrapper{
-  display: flex;
-  flex-direction: column;
-}
+  .field-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
 
-h2 {
-  font-size: 75px; 
-  font-weight: normal;
-}
+  #{$form-input-text} {
+    @include input-theme;
+    padding: 5px 20px 5px 20px;
+  }
 
-#{$form-input-text} {
-  font-size: 24px;
-  color: white;
-  background-color: $field-background;
-  font-family: "Jura";
-  border: none;
-  border-radius: 25px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
+  #packaging-list {
+    @include input-theme;
+    padding: 5px 42px 5px 42px;
+    min-height: 100px;
+  }
 
-#packaging-list{
-  padding-left: 30px;
-  font-size: 24px;
-  font-family: "Jura";
-  background-color: $field-background;
-  border-radius: 25px;
-  padding-left: 42px;
-  padding-right: 42px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  min-height: 100px;
-}
+  input::-webkit-input-placeholder {
+    color: white;
+  }
 
-input::-webkit-input-placeholder {
-  color: white;
-}
+  input:focus,
+  input:focus {
+    outline: none;
+  }
 
-input:focus, input:focus{
-  outline: none;
+  input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
 }
-
-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-
