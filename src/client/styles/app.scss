@@ -1,6 +1,12 @@
 /*** Variables ***/
 $background-color: #dabfff;
 $primary-color: #2c2a4a;
+$secondary-color: #7FDEFF;
+$background-dark-color: #4F518C;
+$field-background: #8D90EF;
+
+$form-input-text: 'input[type="text"], input[type="date"], input[type="button"]';
+
 
 /*** General ***/
 * {
@@ -10,6 +16,8 @@ $primary-color: #2c2a4a;
 
 body {
   font-family: "Italianno";
+  font-size: 64px;
+  color: white;
   background: $background-color;
 }
 
@@ -28,99 +36,115 @@ body {
 header {
   grid-area: "header";
   background: $primary-color;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between
 }
 
 main {
   grid-area: "main";
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  padding: 50px;
 }
 
 footer {
-  background: #2c2a4a;
+  background: $primary-color;
+  color: $secondary-color;
   text-align: center;
   justify-content: center;
   display: flex;
   align-items: center;
+  font-size: 30px;
+}
+
+/*** Header ***/
+
+h1 { 
+  font-size: 128px;
+  color: $secondary-color;
+  font-weight: normal;
+}
+
+nav {
+  margin-right: 60px;
+  display: flex;
+  gap: 60px;
+
+  a{
+    font-size: 75px;
+    color: white;
+    text-decoration: none;
+  }
 }
 
 /*** Main Area ***/
-.entry-field {
-  display: block;
-  background: #22b2da;
-  color: #f0d43a;
-  font-size: 20px;
-  font-family: "Oswald", sans-serif;
-  border: none;
+
+.input-wrapper {
+  background: $background-dark-color;
+  border-radius: 25px;
+  padding: 30px;
 }
 
-.entry-field:focus {
-  background-color: aliceblue;
-}
-
-.entry {
-  background: rgba(59, 74, 107, 0.4);
-}
-
-#historyHolder li {
+.input-form {
   display: flex;
-  gap: 25px;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
 }
 
-/*  Basic Styling To Override Default For Basic HTML Elements */
-label {
-  display: block;
-  font-size: 27px;
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
 }
 
-input {
-  height: 60px;
-  width: 320px;
+.field-wrapper{
+  display: flex;
+  flex-direction: column;
 }
 
-button {
-  width: 400px;
-  height: 100px;
-  background: #3b4a6b;
-  color: #f0d43a;
-  font-size: 26px;
-  font-family: "Oswald", sans-serif;
+h2 {
+  font-size: 75px; 
+  font-weight: normal;
+}
+
+#{$form-input-text} {
+  font-size: 24px;
+  color: white;
+  background-color: $field-background;
+  font-family: "Jura";
   border: none;
-  box-shadow: 2px 4px 5px #444;
-}
-button:hover {
-  cursor: pointer;
-  background: aliceblue;
-}
-
-h1 {
-  font-size: 36px;
+  border-radius: 25px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
-/* Reset style for HTML element on active to have no border*/
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
+#packaging-list{
+  padding-left: 30px;
+  font-size: 24px;
+  font-family: "Jura";
+  background-color: $field-background;
+  border-radius: 25px;
+  padding-left: 42px;
+  padding-right: 42px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-height: 100px;
+}
+
+input::-webkit-input-placeholder {
+  color: white;
+}
+
+input:focus, input:focus{
   outline: none;
 }
 
-/* Style for Placeholder Text*/
-::placeholder {
-  /* Firefox, Chrome, Opera */
-  color: #f0d43a;
-  font-family: "Oswald", sans-serif;
+input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
-:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: #f0d43a;
-  font-family: "Oswald", sans-serif;
-}
-
-::-ms-input-placeholder {
-  /* Microsoft Edge */
-  color: #f0d43a;
-  font-family: "Oswald", sans-serif;
-}
