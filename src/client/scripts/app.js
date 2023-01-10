@@ -1,5 +1,5 @@
 /** Javascript for Website handling
- * @module website/app
+ * @module client/scripts/app
  */
 
 /**
@@ -7,9 +7,6 @@
  * Define Global Variables
  */
 
-// Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
 /**
  * End Global Variables
  *
@@ -95,9 +92,51 @@ async function getWeatherHistoryData(url) {
  * @param {Event} event
  */
 function documentLoaded(event) {
-  const generate = document.getElementById("generate");
-  generate.addEventListener("click", generateOnClick);
+  const addLocation = document.getElementById("add-location");
+  const saveTrip = document.getElementById("save-trip");
+  const exportTrip = document.getElementById("export-trip");
+  const cancelTrip = document.getElementById("cancel-trip");
+  console.log("loaded");
+
+  addLocation.addEventListener("click", addLocationClick);
+  saveTrip.addEventListener("click", saveTrip);
+  exportTrip.addEventListener("click", exportTrip);
+  cancelTrip.addEventListener("click", cancelTrip);
 }
+
+/**
+ * add another location to the current trip generation
+ * @param {Event} event
+ */
+function addLocationClick(event) {
+  let newLocation = document
+    .querySelector(".input-form")
+    .firstElementChild.cloneNode(true);
+
+  console.log(newLocation.outerHTML);
+  event.target.parentElement.insertAdjacentHTML(
+    "beforebegin",
+    newLocation.outerHTML
+  );
+}
+
+/**
+ * save all inputs to and generate a trip
+ * @param {Event} event
+ */
+function saveTrip(event) {}
+
+/**
+ * export Trip to PDF
+ * @param {Event} event
+ */
+function exportTrip(event) {}
+
+/**
+ * remove Trip from UI and database
+ * @param {Event} event
+ */
+function cancelTrip(event) {}
 
 /**
  * End Main Functions
@@ -107,65 +146,3 @@ function documentLoaded(event) {
  */
 
 document.addEventListener("DOMContentLoaded", documentLoaded);
-
-/**
- * generate weatherData and refresh ui
- * @param {Event} event
- */
-function generateOnClick(event) {
-  const url = "/api/weather-records";
-  const weatherData = {};
-  const zip = document.getElementById("zip");
-  const feelings = document.getElementById("feelings");
-  const now = new Date();
-
-  weatherData.feelings = feelings.value;
-  weatherData.date = `${now.getDate()}.${
-    now.getMonth() + 1
-  }.${now.getFullYear()}`;
-
-  getTemperature(zip.value).then((result) => {
-    weatherData.temperature = result;
-    uploadWeatherData(url, weatherData).then(updateWeatherHistory(url));
-  });
-
-  // reset input fields
-  zip.value = "";
-  feelings.value = "";
-  zip.focus();
-}
-
-/**
- * Updating the weatherHistory
- */
-async function updateWeatherHistory(url) {
-  getWeatherHistoryData(url).then(showWeatherHistory);
-}
-
-/**
- * create and fill all elements needed to dispay the weatherHistory
- * @param {Array<object>} weatherHistory
- */
-function showWeatherHistory(weatherHistory) {
-  const historyFragment = new DocumentFragment();
-  const ul = document.createElement("ul");
-
-  for (entry of weatherHistory) {
-    const li = document.createElement("li");
-    const spanDate = document.createElement("span");
-    const spanTemperature = document.createElement("span");
-    const spanFeelings = document.createElement("span");
-
-    spanDate.innerText = `Date: ${entry.date}`;
-    spanTemperature.innerText = `Temperature: ${entry.temperature} °C`;
-    spanFeelings.innerText = `Feelings: ${entry.feelings}`;
-
-    li.appendChild(spanDate);
-    li.appendChild(spanTemperature);
-    li.appendChild(spanFeelings);
-
-    ul.appendChild(li);
-  }
-  historyFragment.appendChild(ul);
-  document.getElementById("historyHolder").replaceChildren(historyFragment);
-}
