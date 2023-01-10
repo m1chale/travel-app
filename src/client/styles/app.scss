@@ -1,14 +1,15 @@
 /*** Variables ***/
 $background-color: #dabfff;
+$background-dark-color: #4f518c;
+$background-highlight-color: #907ad6;
 $primary-color: #2c2a4a;
 $secondary-color: #7fdeff;
-$background-dark-color: #4f518c;
 $field-background: #8d90ef;
 
 $primary-font: "Italianno";
 $secondary-font: "Jura";
 
-$form-input-text: 'input[type="text"], input[type="date"], input[type="button"]';
+$input-elements: 'input[type="text"], input[type="date"], input[type="button"]';
 
 /*** Mixins ***/
 @mixin input-theme {
@@ -45,6 +46,7 @@ body {
     "footer";
 
   header {
+    padding-left: 50px;
     grid-area: "header";
     background: $primary-color;
     display: flex;
@@ -58,6 +60,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 50px;
+    gap: 25px;
   }
 
   footer {
@@ -72,10 +75,18 @@ body {
 }
 
 /*** Header ***/
-h1 {
-  font-size: 128px;
-  color: $secondary-color;
-  font-weight: normal;
+.logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  h1 {
+    padding-top: 8px;
+    font-size: 128px;
+    color: $secondary-color;
+    font-weight: normal;
+  }
 }
 
 nav {
@@ -91,7 +102,8 @@ nav {
 }
 
 /*** Main Area ***/
-.input-wrapper {
+.input-wrapper,
+.triplist-wrapper {
   background: $background-dark-color;
   border-radius: 25px;
   padding: 30px;
@@ -100,6 +112,74 @@ nav {
     font-size: 75px;
     font-weight: normal;
   }
+
+  h3 {
+    font-size: 64px;
+    font-weight: normal;
+  }
+
+  h4 {
+    font-size: 52px;
+    font-weight: normal;
+  }
+}
+
+.trip-wrapper {
+  background: $background-highlight-color;
+  border-radius: 25px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.weather-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.trip-head {
+  display: flex;
+  flex-direction: row;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+.center {
+  justify-content: center;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  font-size: 40px;
+  font-family: $secondary-font;
+  color: $primary-color;
+}
+
+#{$input-elements},
+.trip-packaging-list,
+#export-trip,
+#cancel-trip {
+  @include input-theme;
+  padding: 5px 20px 5px 20px;
+}
+
+.trip-details {
+  @include input-theme;
+  display: inline-block;
+  padding: 5px 20px 5px 20px;
 }
 
 .input-form {
@@ -108,20 +188,9 @@ nav {
   gap: 30px;
   align-items: flex-start;
 
-  .row {
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-  }
-
   .field-wrapper {
     display: flex;
     flex-direction: column;
-  }
-
-  #{$form-input-text} {
-    @include input-theme;
-    padding: 5px 20px 5px 20px;
   }
 
   #packaging-list {
@@ -142,4 +211,9 @@ nav {
   input::-webkit-calendar-picker-indicator {
     filter: invert(1);
   }
+}
+
+.location-img {
+  max-width: 45%;
+  border-radius: 25px;
 }
