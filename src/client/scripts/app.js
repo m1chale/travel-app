@@ -93,15 +93,16 @@ async function getWeatherHistoryData(url) {
  */
 function documentLoaded(event) {
   const addLocation = document.getElementById("add-location");
+  const addItem = document.getElementById("add-item");
   const saveTrip = document.getElementById("save-trip");
   const exportTrip = document.getElementById("export-trip");
   const cancelTrip = document.getElementById("cancel-trip");
-  console.log("loaded");
 
   addLocation.addEventListener("click", addLocationClick);
-  saveTrip.addEventListener("click", saveTrip);
-  exportTrip.addEventListener("click", exportTrip);
-  cancelTrip.addEventListener("click", cancelTrip);
+  addItem.addEventListener("keypress", addItemKeypress);
+  saveTrip.addEventListener("click", saveTripClick);
+  exportTrip.addEventListener("click", exportTripClick);
+  cancelTrip.addEventListener("click", cancelTripClick);
 }
 
 /**
@@ -109,11 +110,19 @@ function documentLoaded(event) {
  * @param {Event} event
  */
 function addLocationClick(event) {
-  let newLocation = document
+  // deep clone input fields
+  const newLocation = document
     .querySelector(".input-form")
     .firstElementChild.cloneNode(true);
 
-  console.log(newLocation.outerHTML);
+  // remove text-nodes (labels)
+  const fieldWrapperList = newLocation.childNodes;
+  fieldWrapperList.forEach((fieldWrapper) => {
+    const childs = fieldWrapper.childNodes;
+    childs.forEach((c) => c.nodeType === Node.TEXT_NODE && c.remove());
+  });
+
+  //insert newLocation in document
   event.target.parentElement.insertAdjacentHTML(
     "beforebegin",
     newLocation.outerHTML
@@ -124,19 +133,39 @@ function addLocationClick(event) {
  * save all inputs to and generate a trip
  * @param {Event} event
  */
-function saveTrip(event) {}
+function addItemKeypress(event) {
+  const packagingList = document.getElementById("packaging-list");
+
+  // @TODO
+  // check input is not empty
+  // check that item is not already in list
+
+  if (event.code == "Enter") {
+    const newItem = document.createElement("li");
+    newItem.innerHTML = event.target.value;
+
+    packagingList.insertAdjacentElement("beforeend", newItem);
+    event.target.value = "";
+  }
+}
+
+/**
+ * save all inputs and generate a trip
+ * @param {Event} event
+ */
+function saveTripClick(event) {}
 
 /**
  * export Trip to PDF
  * @param {Event} event
  */
-function exportTrip(event) {}
+function exportTripClick(event) {}
 
 /**
  * remove Trip from UI and database
  * @param {Event} event
  */
-function cancelTrip(event) {}
+function cancelTripClick(event) {}
 
 /**
  * End Main Functions
