@@ -136,17 +136,27 @@ function addLocationClick(event) {
 function addItemKeypress(event) {
   const packagingList = document.getElementById("packaging-list");
 
-  // @TODO
-  // check input is not empty
-  // check that item is not already in list
+  if (event.code == "Enter" && event.target.value != "") {
+    if (checkForDuplicateItem(packagingList, event.target.value)) {
+      const newItem = document.createElement("li");
+      newItem.innerHTML = event.target.value;
 
-  if (event.code == "Enter") {
-    const newItem = document.createElement("li");
-    newItem.innerHTML = event.target.value;
-
-    packagingList.insertAdjacentElement("beforeend", newItem);
+      packagingList.insertAdjacentElement("beforeend", newItem);
+    }
     event.target.value = "";
   }
+}
+
+/**
+ * check if item already exists in list
+ * @param {object} packagingList
+ * @param {string} item
+ */
+function checkForDuplicateItem(packagingList, item) {
+  for (listElem of packagingList.childNodes) {
+    if (listElem.innerHTML == item) return false;
+  }
+  return true;
 }
 
 /**
