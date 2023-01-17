@@ -2,6 +2,19 @@
  * @module client/scripts/app
  */
 
+// const Trip = require("./Trip.js");
+// @ TODO import class somehow
+class Trip {
+  constructor(packagingList) {
+    this.locations = [];
+    this.packagingList = [...packagingList];
+  }
+
+  addLocation(location) {
+    this.locations.push(location);
+  }
+}
+
 /**
  * ****************************************************
  * Define Global Variables
@@ -163,7 +176,64 @@ function checkForDuplicateItem(packagingList, item) {
  * save all inputs and generate a trip
  * @param {Event} event
  */
-function saveTripClick(event) {}
+function saveTripClick(event) {
+  const trip = createTrip();
+  if (trip) {
+    uploadTrip(trip);
+    resetInputFields();
+  }
+}
+
+/**
+ * get all user inputs into a single trip object
+ * @returns {Trip}
+ */
+function createTrip() {
+  const packagingList = document.getElementById("packaging-list");
+  const locationRows = document.querySelectorAll(".fields");
+  const packagingListItems = [];
+
+  for (item of packagingList.childNodes) {
+    packagingListItems.push(item.innerHTML);
+  }
+
+  const trip = new Trip(packagingListItems);
+
+  for (locationElement of locationRows) {
+    const location = {};
+    location.name = locationElement.children[0].firstElementChild.value;
+    location.startDate = locationElement.children[1].firstElementChild.value;
+    location.endDate = locationElement.children[2].firstElementChild.value;
+    trip.addLocation(location);
+  }
+
+  return trip;
+}
+
+/**
+ * uploads trip information to the server
+ * @param {Trip} trip trip information
+ */
+function uploadTrip(trip) {}
+
+/**
+ * reset all input fields back to default
+ */
+function resetInputFields() {
+  document.getElementById("packaging-list").innerHTML = "";
+
+  const locationRows = document.querySelectorAll(".fields");
+
+  for (i = 0; i < locationRows.length; i++) {
+    if (i == 0) {
+      locationRows[i].children[0].firstElementChild.value = "";
+      locationRows[i].children[1].firstElementChild.value = "";
+      locationRows[i].children[2].firstElementChild.value = "";
+    } else {
+      locationRows[i].remove();
+    }
+  }
+}
 
 /**
  * export Trip to PDF
