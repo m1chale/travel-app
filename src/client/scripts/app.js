@@ -2,12 +2,18 @@
  * @module client/scripts/app
  */
 
+const apiTrips = require("../api/trips");
+
 // const Trip = require("./Trip.js");
 // @ TODO import class somehow
 class Trip {
-  constructor(packagingList) {
+  constructor() {
     this.locations = [];
-    this.packagingList = [...packagingList];
+    this.packagingList = [];
+  }
+
+  setPackagingList(list) {
+    this.packagingList = [...list];
   }
 
   addLocation(location) {
@@ -179,7 +185,7 @@ function checkForDuplicateItem(packagingList, item) {
 function saveTripClick(event) {
   const trip = createTrip();
   if (trip) {
-    uploadTrip(trip);
+    apiTrips.uploadTrip(trip);
     resetInputFields();
   }
 }
@@ -189,6 +195,7 @@ function saveTripClick(event) {
  * @returns {Trip}
  */
 function createTrip() {
+  const trip = new Trip();
   const packagingList = document.getElementById("packaging-list");
   const locationRows = document.querySelectorAll(".fields");
   const packagingListItems = [];
@@ -197,7 +204,9 @@ function createTrip() {
     packagingListItems.push(item.innerHTML);
   }
 
-  const trip = new Trip(packagingListItems);
+  trip.setPackagingList(packagingListItems);
+
+  console.dir(locationRows);
 
   for (locationElement of locationRows) {
     const location = {};
@@ -209,12 +218,6 @@ function createTrip() {
 
   return trip;
 }
-
-/**
- * uploads trip information to the server
- * @param {Trip} trip trip information
- */
-function uploadTrip(trip) {}
 
 /**
  * reset all input fields back to default

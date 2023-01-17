@@ -16,6 +16,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const Joi = require("joi");
 const dotenv = require("dotenv");
+const crypto = require("crypto");
 
 /**
  * ****************************************************
@@ -23,11 +24,11 @@ const dotenv = require("dotenv");
  */
 
 /**
- * weatherRecords holding all the weatherData
+ * tripList holding all the trips with its informations
  * @type {object}
  * @const
  */
-const weatherRecords = [];
+const tripList = ["test"];
 
 /**
  * ****************************************************
@@ -95,8 +96,8 @@ app.get("/api/open-weather-forwarder/:zip/:units", (request, response) => {
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-app.get("/api/weather-records", (request, response) => {
-  response.send(weatherRecords);
+app.get("/api/trips", (request, response) => {
+  response.send(tripList);
 });
 
 /**
@@ -118,25 +119,23 @@ app.get("/api/weather-records/:id", (request, response) => {
 
 /**
  * Route accepting single weather record.
- * @name post/weather-records
+ * @name post/trips
  * @function
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
-app.post("/api/weather-records", (request, response) => {
-  const { error } = validateWeatherData(request.body);
+app.post("/api/trips", (request, response) => {
+  const { error } = validateTrip(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
-
-  const weatherData = {
-    id: weatherRecords.length + 1,
-    date: request.body.date,
-    temperature: request.body.temperature,
-    feelings: request.body.feelings,
+  const trip = {
+    id: crypto.randomBytes(16).toString("hex"),
+    packagingList: request.body.packagingList,
+    locations: request.body.locations,
   };
 
-  weatherRecords.push(weatherData);
-  response.send(weatherData);
+  tripList.push(trip);
+  response.send(trip);
 });
 
 /**
@@ -189,20 +188,25 @@ app.delete("/api/weather-records/:id", (request, response) => {
  */
 
 /**
- * Route serving weather data.
- * @name validateWeatherData
+ * validate a trip record
+ * @name validateTrip
  * @function
- * @param {Object} weatherData - received weather record
+ * @param {Object} trip - received trip record
  * @returns {Joi.ObjectSchema<any>} - validation result
  */
-function validateWeatherData(weatherData) {
+function validateTrip(trip) {
   const validationSchema = Joi.object({
-    date: Joi.string().required(),
-    temperature: Joi.number().required(),
-    feelings: Joi.string().min(3).required(),
+    packagingList: Joi.array().items(Joi.string()),
+    locations: Joi.array().items(
+      Joi.object({
+        name: Joi.string().required(),
+        startDate: Joi.date().required(),
+        endDate: Joi.date().required(),
+      })
+    ),
   });
 
-  return validationSchema.validate(weatherData);
+  return validationSchema.validate(trip);
 }
 
 async function fetchOpenWeather(zip, units) {
