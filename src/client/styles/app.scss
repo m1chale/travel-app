@@ -211,6 +211,10 @@ nav {
   input::-webkit-calendar-picker-indicator {
     filter: invert(1);
   }
+
+  input[type="button"] {
+    cursor: pointer;
+  }
 }
 
 .location-img {
