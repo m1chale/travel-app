@@ -107,6 +107,9 @@ nav {
   background: $background-dark-color;
   border-radius: 25px;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
 
   h2 {
     font-size: 75px;
@@ -169,7 +172,6 @@ nav {
 }
 
 #{$input-elements},
-.trip-packaging-list,
 #export-trip,
 #cancel-trip {
   @include input-theme;
@@ -182,6 +184,12 @@ nav {
   padding: 5px 20px 5px 20px;
 }
 
+.list {
+  @include input-theme;
+  padding: 5px 42px 5px 42px;
+  min-height: 100px;
+}
+
 .input-form {
   display: flex;
   flex-direction: column;
@@ -191,12 +199,6 @@ nav {
   .field-wrapper {
     display: flex;
     flex-direction: column;
-  }
-
-  #packaging-list {
-    @include input-theme;
-    padding: 5px 42px 5px 42px;
-    min-height: 100px;
   }
 
   input::-webkit-input-placeholder {
