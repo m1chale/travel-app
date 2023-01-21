@@ -28,7 +28,10 @@ const crypto = require("crypto");
  * @type {object}
  * @const
  */
-const tripList = ["test"];
+// const tripList = [];
+const tripList = JSON.parse(
+  '[{"id":"8d71647d2a91a2e76ce6eecc598d936f","packagingList":["Hat","Cap","Dog"],"locations":[{"name":"San Francisco","startDate":"2023-02-15","endDate":"2023-03-11"}]},{"id":"359b402af9a1c19564435ef402efd87d","packagingList":["Hallo","Pferd"],"locations":[{"name":"Seattle","startDate":"2023-01-25","endDate":"2023-01-31"},{"name":"Chicago","startDate":"2023-02-02","endDate":"2023-02-04"}]}]'
+);
 
 /**
  * ****************************************************
@@ -101,23 +104,6 @@ app.get("/api/trips", (request, response) => {
 });
 
 /**
- * Route serving single weather record.
- * @name get/weather-records
- * @function
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-app.get("/api/weather-records/:id", (request, response) => {
-  const weatherData = weatherRecords.find(
-    (elem) => elem.id === parseInt(request.params.id)
-  );
-
-  if (!weatherData) return response.status(404).send("ID not found.");
-
-  response.send(weatherData);
-});
-
-/**
  * Route accepting single weather record.
  * @name post/trips
  * @function
@@ -136,6 +122,40 @@ app.post("/api/trips", (request, response) => {
 
   tripList.push(trip);
   response.send(trip);
+});
+
+/**
+ * Route deleting single trip record.
+ * @name delete/trips
+ * @function
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+app.delete("/api/trips/:id", (request, response) => {
+  const trip = tripList.find((elem) => elem.id === request.params.id);
+
+  if (!trip) return response.status(404).send("ID not found.");
+
+  const index = tripList.indexOf(trip);
+  tripList.splice(index, 1);
+  response.send(trip);
+});
+
+/**
+ * Route serving single weather record.
+ * @name get/weather-records
+ * @function
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+app.get("/api/weather-records/:id", (request, response) => {
+  const weatherData = weatherRecords.find(
+    (elem) => elem.id === parseInt(request.params.id)
+  );
+
+  if (!weatherData) return response.status(404).send("ID not found.");
+
+  response.send(weatherData);
 });
 
 /**
@@ -160,25 +180,6 @@ app.put("/api/weather-records/:id", (request, response) => {
   weatherData.temperature = request.body.temperature;
   weatherData.feelings = request.body.feelings;
 
-  response.send(weatherData);
-});
-
-/**
- * Route deleting single weather record.
- * @name delete/weather-records
- * @function
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-app.delete("/api/weather-records/:id", (request, response) => {
-  const weatherData = weatherRecords.find(
-    (elem) => elem.id === parseInt(request.params.id)
-  );
-
-  if (!weatherData) return response.status(404).send("ID not found.");
-
-  const index = weatherRecords.indexOf(weatherData);
-  weatherRecords.splice(index, 1);
   response.send(weatherData);
 });
 
