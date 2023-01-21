@@ -54,35 +54,6 @@ async function getTemperature(zip) {
 }
 
 /**
- * Uploads the weather data to the server
- * @param {object} weatherData
- * @returns {boolean} true if upload finished without error
- */
-async function uploadWeatherData(url, weatherData) {
-  try {
-    const apiRes = await fetch(url, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Body data type must match "Content-Type" header
-      body: JSON.stringify(weatherData),
-    });
-    if (apiRes?.ok) {
-      const apiResWeatherData = await apiRes.json();
-
-      if (apiResWeatherData) return true;
-    } else
-      throw new Error(
-        `HTTP Code: ${apiRes?.status} \n Error-Message: ${await apiRes.text()}`
-      );
-  } catch (error) {
-    console.log("error", error);
-  }
-}
-
-/**
  * Gets the weather history data from the server
  * @returns {Array<object>} weather history
  */
@@ -111,6 +82,8 @@ async function getWeatherHistoryData(url) {
  * @param {Event} event
  */
 function documentLoaded(event) {
+  refreshTripList();
+
   const addLocation = document.getElementById("add-location");
   const addItem = document.getElementById("add-item");
   const saveTrip = document.getElementById("save-trip");
@@ -182,12 +155,14 @@ function checkForDuplicateItem(packagingList, item) {
  * save all inputs and generate a trip
  * @param {Event} event
  */
-function saveTripClick(event) {
+async function saveTripClick(event) {
   const trip = createTrip();
-  if (trip) {
-    apiTrips.uploadTrip(trip);
-    resetInputFields();
-  }
+  // @TODO: validate that at least one location has been added
+
+  await apiTrips.uploadTrip(trip);
+  resetInputFields();
+
+  refreshTripList();
 }
 
 /**
@@ -205,8 +180,6 @@ function createTrip() {
   }
 
   trip.setPackagingList(packagingListItems);
-
-  console.dir(locationRows);
 
   for (locationElement of locationRows) {
     const location = {};
@@ -236,6 +209,177 @@ function resetInputFields() {
       locationRows[i].remove();
     }
   }
+}
+
+async function refreshTripList() {
+  const tripList = await apiTrips.getTrips();
+  updateTripListUI(tripList);
+}
+
+function updateTripListUI(tripList) {
+  const tripListWrapper = document.querySelector(".triplist-wrapper");
+
+  if (!tripList.length > 0) {
+    if (tripListWrapper) tripListWrapper.remove();
+    return;
+  }
+
+  const tripListFragment = new DocumentFragment();
+  const section = createTripListHeaderUI();
+
+  tripListFragment.appendChild(section);
+
+  for (trip of tripList) {
+    const tripWrapper = createTripInformationUI();
+    section.appendChild(tripWrapper);
+
+    trip.locations.forEach((location) => {
+      tripWrapper.appendChild(createLocationUI());
+    });
+  }
+
+  // update dom
+
+  if (tripListWrapper) {
+    tripListWrapper.replaceWith(tripListFragment);
+  } else {
+    document.querySelector("main").appendChild(tripListFragment);
+  }
+}
+
+function createTripListHeaderUI() {
+  const section = document.createElement("section");
+  const heading = document.createElement("h2");
+
+  section.classList.add("triplist-wrapper");
+  heading.innerText = "Triplist";
+
+  section.appendChild(heading);
+
+  return section;
+}
+
+function createTripInformationUI() {
+  const tripWrapper = document.createElement("div");
+  const locationsHeading = document.createElement("h3");
+  const row = document.createElement("div");
+  const col = document.createElement("div");
+  const tripDetails = document.createElement("div");
+  const exportTrip = document.createElement("input");
+  const cancelTrip = document.createElement("input");
+  const packagingList = document.createElement("div");
+  const items = document.createElement("ul");
+
+  const countdown = Math.round(
+    (new Date(trip.locations[0].startDate) - new Date()) / (1000 * 60 * 60 * 24)
+  );
+  const tripLength = Math.round(
+    (new Date(trip.locations[trip.locations.length - 1].endDate) -
+      new Date(trip.locations[0].startDate)) /
+      (1000 * 60 * 60 * 24)
+  );
+
+  tripWrapper.classList.add("trip-wrapper");
+
+  locationsHeading.innerText = trip.locations.reduce(
+    (namelist, currentLocation, idx) =>
+      idx == 0 ? currentLocation.name : namelist + " - " + currentLocation.name,
+    ""
+  );
+  tripWrapper.appendChild(locationsHeading);
+
+  row.classList.add("row");
+  tripWrapper.appendChild(row);
+
+  col.classList.add("col");
+  row.appendChild(col);
+
+  tripDetails.classList.add("trip-details");
+  tripDetails.innerHTML =
+    `<div>Countdown</div><div>${countdown} to go</div>` +
+    `<div>Trip length</div><div>${tripLength}</div>`;
+
+  col.appendChild(tripDetails);
+
+  exportTrip.value = "Export Trip";
+  exportTrip.type = "button";
+  col.appendChild(exportTrip);
+
+  cancelTrip.value = "Cancel Trip";
+  cancelTrip.type = "button";
+
+  const tripId = trip.id;
+  cancelTrip.onclick = async () => {
+    await apiTrips.deleteTrip(tripId);
+    refreshTripList();
+  };
+
+  col.appendChild(cancelTrip);
+
+  packagingList.classList.add("list");
+  packagingList.innerText = "Packaging List";
+  packagingList.appendChild(items);
+
+  for (listItem of trip.packagingList) {
+    const item = document.createElement("li");
+    item.innerText = listItem;
+    items.appendChild(item);
+  }
+  row.appendChild(packagingList);
+
+  return tripWrapper;
+}
+
+function createLocationUI() {
+  const locationWrapper = document.createElement("div");
+  const locationHeading = document.createElement("h4");
+  const locationImage = document.createElement("img");
+  const weatherHeading = document.createElement("h4");
+  const weatherWrapper = document.createElement("div");
+
+  locationWrapper.classList.add("location-wrapper");
+
+  locationHeading.innerText = location.name;
+  locationWrapper.appendChild(locationHeading);
+
+  locationImage.classList.add("location-img");
+  //TODO: set location source
+  locationWrapper.appendChild(locationImage);
+
+  weatherHeading.innerText = "Weather";
+  locationWrapper.appendChild(weatherHeading);
+
+  weatherWrapper.classList.add("weather-wrapper");
+  locationWrapper.appendChild(weatherWrapper);
+
+  // for each day{
+  //   if dayRowCnt = 0
+  let currentRow;
+  const dayCnt = 0;
+  const row = document.createElement("div");
+  row.classList.add("row");
+  row.classList.add("center");
+  weatherWrapper.appendChild(row);
+  currentRow = row;
+
+  // createDay
+  const dayWrapper = document.createElement("div");
+  const date = document.createElement("span");
+  const weatherIcon = document.createElement("img");
+  const temperature = document.createElement("span");
+
+  dayWrapper.classList.add("day");
+  currentRow.appendChild(dayWrapper);
+
+  date.innerText = "25.01";
+  dayWrapper.appendChild(date);
+
+  dayWrapper.appendChild(weatherIcon);
+
+  temperature.innerText = "20°C";
+  dayWrapper.appendChild(temperature);
+
+  return locationWrapper;
 }
 
 /**
