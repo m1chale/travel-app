@@ -172,10 +172,13 @@ nav {
 }
 
 #{$input-elements},
-#export-trip,
-#cancel-trip {
+input[type="button"] {
   @include input-theme;
   padding: 5px 20px 5px 20px;
+}
+
+input[type="button"] {
+  cursor: pointer;
 }
 
 .trip-details {
@@ -212,10 +215,6 @@ nav {
 
   input::-webkit-calendar-picker-indicator {
     filter: invert(1);
-  }
-
-  input[type="button"] {
-    cursor: pointer;
   }
 }
 
