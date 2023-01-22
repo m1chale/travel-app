@@ -20,7 +20,7 @@ module.exports = {
   optimization: {},
   plugins: [
     new htmlWebpackPlugin({
-      template: "./src/client/index.html",
+      template: "./src/client/views/index.html",
       filename: "./index.html",
     }),
   ],
