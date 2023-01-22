@@ -82,7 +82,7 @@ async function getWeatherHistoryData(url) {
  * initializing
  * @param {Event} event
  */
-function documentLoaded(event) {
+function initApp(event) {
   refreshTripList();
 
   const addLocation = document.getElementById("add-location");
@@ -405,4 +405,4 @@ function cancelTripClick(event) {}
  * Begin Events
  */
 
-document.addEventListener("DOMContentLoaded", documentLoaded);
+document.addEventListener("DOMContentLoaded", initApp);
