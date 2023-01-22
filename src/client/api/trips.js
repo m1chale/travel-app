@@ -40,7 +40,6 @@ export async function uploadTrip(trip) {
  */
 export async function getTrips() {
   const response = await fetch(url);
-  console.log("getTrips");
   return response.json();
 }
 
