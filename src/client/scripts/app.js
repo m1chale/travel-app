@@ -297,8 +297,8 @@ function createTripInformationUI(trip) {
 
   tripDetails.classList.add("trip-details");
   tripDetails.innerHTML =
-    `<div>Countdown</div><div>${countdown} to go</div>` +
-    `<div>Trip length</div><div>${tripLength}</div>`;
+    `<div>Countdown</div><div>${countdown} days to go</div>` +
+    `<div>Trip length</div><div>${tripLength} days</div>`;
 
   col.appendChild(tripDetails);
 
