@@ -3,6 +3,7 @@
  */
 
 const apiTrips = require("../api/trips");
+import { getPictureAsync } from "../api/pixabay";
 
 // const Trip = require("./Trip.js");
 // @ TODO import class somehow
@@ -229,12 +230,12 @@ function updateTripListUI(tripList) {
 
   tripListFragment.appendChild(section);
 
-  for (trip of tripList) {
-    const tripWrapper = createTripInformationUI();
+  for (const trip of tripList) {
+    const tripWrapper = createTripInformationUI(trip);
     section.appendChild(tripWrapper);
 
     trip.locations.forEach((location) => {
-      tripWrapper.appendChild(createLocationUI());
+      tripWrapper.appendChild(createLocationUI(location));
     });
   }
 
@@ -259,7 +260,7 @@ function createTripListHeaderUI() {
   return section;
 }
 
-function createTripInformationUI() {
+function createTripInformationUI(trip) {
   const tripWrapper = document.createElement("div");
   const locationsHeading = document.createElement("h3");
   const row = document.createElement("div");
@@ -320,7 +321,7 @@ function createTripInformationUI() {
   packagingList.innerText = "Packaging List";
   packagingList.appendChild(items);
 
-  for (listItem of trip.packagingList) {
+  for (const listItem of trip.packagingList) {
     const item = document.createElement("li");
     item.innerText = listItem;
     items.appendChild(item);
@@ -330,7 +331,7 @@ function createTripInformationUI() {
   return tripWrapper;
 }
 
-function createLocationUI() {
+function createLocationUI(location) {
   const locationWrapper = document.createElement("div");
   const locationHeading = document.createElement("h4");
   const locationImage = document.createElement("img");
@@ -343,7 +344,10 @@ function createLocationUI() {
   locationWrapper.appendChild(locationHeading);
 
   locationImage.classList.add("location-img");
-  //TODO: set location source
+  getPictureAsync(location.name).then((result) => {
+    locationImage.src = result;
+  });
+
   locationWrapper.appendChild(locationImage);
 
   weatherHeading.innerText = "Weather";
