@@ -77,22 +77,6 @@ function listening() {
  */
 
 /**
- * Open weather forwarder
- * @name get/open-weather-forwarder
- * @function
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-app.get("/api/open-weather-forwarder/:zip/:units", (request, response) => {
-  //request.query = sortBy=name
-  fetchOpenWeather(request.params.zip, request.params.units).then(
-    (weatherRecords) => {
-      response.send(weatherRecords);
-    }
-  );
-});
-
-/**
  * Route serving weather data.
  * @name get/weather-records
  * @function
@@ -120,7 +104,17 @@ app.post("/api/trips", (request, response) => {
     locations: request.body.locations,
   };
 
-  tripList.push(trip);
+  console.log(trip.locations);
+
+  for (location of trip.locations) {
+    getLocationCoords(location.name).then((coords) => {
+      location.lat = coords.lat;
+      location.lng = coords.lng;
+
+      tripList.push(trip);
+    });
+  }
+
   response.send(trip);
 });
 
@@ -210,15 +204,28 @@ function validateTrip(trip) {
   return validationSchema.validate(trip);
 }
 
-async function fetchOpenWeather(zip, units) {
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${zip}&units=${units}&appid=${apiKey}`;
+async function getLocationCoords(locationName) {
+  const locationGeo = await fetchGeoNamesApi(locationName);
+
+  if (locationGeo) {
+    const result = {};
+    result.lat = locationGeo.postalCodes[0].lat;
+    result.lng = locationGeo.postalCodes[0].lng;
+    return result;
+  }
+
+  return null;
+}
+
+async function fetchGeoNamesApi(locationName) {
+  const url = `http://api.geonames.org/postalCodeSearchJSON?placename=${locationName}&username=_m1chael`;
 
   try {
     const apiRes = await fetch(url);
 
     if (apiRes?.ok) {
-      const weatherData = await apiRes.json();
-      if (weatherData) return weatherData;
+      const locationData = await apiRes.json();
+      if (locationData) return locationData;
     } else throw new Error(`HTTP Code: ${apiRes?.status}`);
   } catch (error) {
     console.log("There was an error", error);
