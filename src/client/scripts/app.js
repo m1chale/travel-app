@@ -176,13 +176,13 @@ function createTrip() {
   const locationRows = document.querySelectorAll(".fields");
   const packagingListItems = [];
 
-  for (item of packagingList.childNodes) {
+  for (const item of packagingList.childNodes) {
     packagingListItems.push(item.innerHTML);
   }
 
   trip.setPackagingList(packagingListItems);
 
-  for (locationElement of locationRows) {
+  for (const locationElement of locationRows) {
     const location = {};
     location.name = locationElement.children[0].firstElementChild.value;
     location.startDate = locationElement.children[1].firstElementChild.value;
@@ -201,7 +201,7 @@ function resetInputFields() {
 
   const locationRows = document.querySelectorAll(".fields");
 
-  for (i = 0; i < locationRows.length; i++) {
+  for (let i = 0; i < locationRows.length; i++) {
     if (i == 0) {
       locationRows[i].children[0].firstElementChild.value = "";
       locationRows[i].children[1].firstElementChild.value = "";
