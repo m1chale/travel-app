@@ -98,23 +98,26 @@ app.post("/api/trips", (request, response) => {
   const { error } = validateTrip(request.body);
 
   if (error) return response.status(400).send(error.details[0].message);
+
   const trip = {
     id: crypto.randomBytes(16).toString("hex"),
     packagingList: request.body.packagingList,
     locations: request.body.locations,
   };
 
-  console.log(trip.locations);
+  for (let i = 0; i < trip.locations.length; i++) {
+    getLocationCoords(trip.locations[i].name).then((coords) => {
+      trip.locations[i].lat = coords.lat;
+      trip.locations[i].lng = coords.lng;
 
-  for (location of trip.locations) {
-    getLocationCoords(location.name).then((coords) => {
-      location.lat = coords.lat;
-      location.lng = coords.lng;
-
-      tripList.push(trip);
+      getWeatherForecast(trip.locations[i].lat, trip.locations[i].lng).then(
+        (weatherForecast) => {
+          trip.locations[i].weatherForecast = weatherForecast;
+        }
+      );
     });
   }
-
+  tripList.push(trip);
   response.send(trip);
 });
 
@@ -207,14 +210,12 @@ function validateTrip(trip) {
 async function getLocationCoords(locationName) {
   const locationGeo = await fetchGeoNamesApi(locationName);
 
-  if (locationGeo) {
-    const result = {};
-    result.lat = locationGeo.postalCodes[0].lat;
-    result.lng = locationGeo.postalCodes[0].lng;
-    return result;
-  }
+  if (!locationGeo) return null;
 
-  return null;
+  const result = {};
+  result.lat = locationGeo.postalCodes[0].lat;
+  result.lng = locationGeo.postalCodes[0].lng;
+  return result;
 }
 
 async function fetchGeoNamesApi(locationName) {
@@ -226,6 +227,38 @@ async function fetchGeoNamesApi(locationName) {
     if (apiRes?.ok) {
       const locationData = await apiRes.json();
       if (locationData) return locationData;
+    } else throw new Error(`HTTP Code: ${apiRes?.status}`);
+  } catch (error) {
+    console.log("There was an error", error);
+  }
+}
+
+async function getWeatherForecast(lat, lng) {
+  const forecast = await fetchForecastWeatherBitApi(lat, lng);
+
+  if (!forecast) return null;
+
+  const result = [];
+  for (forecastDay of forecast.data) {
+    const day = {};
+    day.temp = forecastDay.temp;
+    day.weatherCode = forecastDay.weather.code;
+    day.date = forecastDay.valid_date;
+    result.push(day);
+  }
+  console.log(result);
+  return result;
+}
+
+async function fetchForecastWeatherBitApi(lat, lng) {
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&days=16&key=6a0b38e6c8aa455fb0937f561344e923`;
+
+  try {
+    const apiRes = await fetch(url);
+
+    if (apiRes?.ok) {
+      const forecastData = await apiRes.json();
+      if (forecastData) return forecastData;
     } else throw new Error(`HTTP Code: ${apiRes?.status}`);
   } catch (error) {
     console.log("There was an error", error);
