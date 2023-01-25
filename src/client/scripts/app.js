@@ -4,6 +4,7 @@
 
 const apiTrips = require("../api/trips");
 import { getPictureAsync } from "../api/pixabay";
+import icon from "../media/weather-sunny.svg";
 
 // const Trip = require("./Trip.js");
 // @ TODO import class somehow
@@ -146,7 +147,7 @@ function addItemKeypress(event) {
  * @param {string} item
  */
 function checkForDuplicateItem(packagingList, item) {
-  for (listElem of packagingList.childNodes) {
+  for (const listElem of packagingList.childNodes) {
     if (listElem.innerHTML == item) return false;
   }
   return true;
@@ -356,32 +357,55 @@ function createLocationUI(location) {
   weatherWrapper.classList.add("weather-wrapper");
   locationWrapper.appendChild(weatherWrapper);
 
-  // for each day{
-  //   if dayRowCnt = 0
+  const dayCount = Math.round(
+    (new Date(location.endDate) - new Date(location.startDate)) /
+      (1000 * 60 * 60 * 24) +
+      1
+  );
+
   let currentRow;
-  const dayCnt = 0;
-  const row = document.createElement("div");
-  row.classList.add("row");
-  row.classList.add("center");
-  weatherWrapper.appendChild(row);
-  currentRow = row;
+  let daysPerRow = 0;
 
-  // createDay
-  const dayWrapper = document.createElement("div");
-  const date = document.createElement("span");
-  const weatherIcon = document.createElement("img");
-  const temperature = document.createElement("span");
+  for (let i = 0; i < dayCount; i++) {
+    if (daysPerRow == 0) {
+      const row = document.createElement("div");
+      row.classList.add("row");
+      weatherWrapper.appendChild(row);
+      currentRow = row;
+    }
+    daysPerRow++;
+    if (daysPerRow == 7) daysPerRow = 0;
 
-  dayWrapper.classList.add("day");
-  currentRow.appendChild(dayWrapper);
+    const startDate = new Date(location.startDate);
+    startDate.setDate(new Date(location.startDate).getDate() + i);
 
-  date.innerText = "25.01";
-  dayWrapper.appendChild(date);
+    const dayWrapper = document.createElement("div");
+    const date = document.createElement("span");
+    const weatherIcon = document.createElement("img");
+    const temperature = document.createElement("span");
 
-  dayWrapper.appendChild(weatherIcon);
+    dayWrapper.classList.add("day");
+    dayWrapper.classList.add("center");
+    currentRow.appendChild(dayWrapper);
 
-  temperature.innerText = "20°C";
-  dayWrapper.appendChild(temperature);
+    date.innerText = startDate.getDate() + "." + startDate.getMonth() + 1;
+    dayWrapper.appendChild(date);
+
+    weatherIcon.classList.add("location-img");
+    weatherIcon.src = icon;
+    dayWrapper.appendChild(weatherIcon);
+
+    for (const forecastDay of location.weatherForecast) {
+      if (startDate.getTime() == new Date(forecastDay.date).getTime()) {
+        temperature.innerText = forecastDay.temp + "°C";
+        break;
+      }
+    }
+
+    if (!temperature.innerHTML) temperature.innerHTML = "-";
+
+    dayWrapper.appendChild(temperature);
+  }
 
   return locationWrapper;
 }
