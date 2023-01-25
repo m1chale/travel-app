@@ -403,7 +403,7 @@ function createLocationUI(location) {
     dayWrapper.classList.add("day");
     currentRow.appendChild(dayWrapper);
 
-    date.innerText = startDate.getDate() + "." + startDate.getMonth() + 1;
+    date.innerText = startDate.getDate() + "." + (startDate.getMonth() + 1);
     dayWrapper.appendChild(date);
 
     weatherIcon.classList.add("location-img");
