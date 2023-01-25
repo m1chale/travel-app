@@ -6,8 +6,13 @@ const apiTrips = require("../api/trips");
 import { getPictureAsync } from "../api/pixabay";
 
 import logoIcon from "../media/world.svg";
-import icon from "../media/weather-sunny.svg";
+
 import fallbackLocation from "../media/fallback-location.png";
+import weatherCloudy from "../media/weather-cloudy.svg";
+import weatherSunny from "../media/weather-sunny.svg";
+import weatherRainy from "../media/weather-rainy.svg";
+import weatherSnowy from "../media/weather-snowy.svg";
+import weatherStormy from "../media/weather-stormy.svg";
 
 // const Trip = require("./Trip.js");
 // @ TODO import class somehow
@@ -395,20 +400,19 @@ function createLocationUI(location) {
     const temperature = document.createElement("span");
 
     dayWrapper.classList.add("day");
-    dayWrapper.classList.add("center");
     currentRow.appendChild(dayWrapper);
 
     date.innerText = startDate.getDate() + "." + startDate.getMonth() + 1;
     dayWrapper.appendChild(date);
 
     weatherIcon.classList.add("location-img");
-    weatherIcon.src = icon;
     dayWrapper.appendChild(weatherIcon);
 
     if (location.weatherForecast) {
       for (const forecastDay of location.weatherForecast) {
         if (startDate.getTime() == new Date(forecastDay.date).getTime()) {
           temperature.innerText = forecastDay.temp + "°C";
+          weatherIcon.src = getWeatherIcon(forecastDay.weatherCode);
           break;
         }
       }
@@ -420,6 +424,20 @@ function createLocationUI(location) {
   }
 
   return locationWrapper;
+}
+
+function getWeatherIcon(code) {
+  if (code <= 233) {
+    return weatherStormy;
+  } else if (code > 233 && code <= 522) {
+    return weatherRainy;
+  } else if (code > 522 && code <= 623) {
+    return weatherSnowy;
+  } else if ((code > 623 && code <= 751) || code > 801) {
+    return weatherCloudy;
+  } else {
+    return weatherSunny;
+  }
 }
 
 /**
