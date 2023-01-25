@@ -167,9 +167,11 @@ nav {
 .day {
   display: flex;
   flex-direction: column;
+  align-items: center;
   font-size: 40px;
   font-family: $secondary-font;
   color: $primary-color;
+  width: 100px;
 }
 
 #{$input-elements},
