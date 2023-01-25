@@ -30,7 +30,7 @@ const crypto = require("crypto");
  */
 // const tripList = [];
 const tripList = JSON.parse(
-  '[{"id":"8d71647d2a91a2e76ce6eecc598d936f","packagingList":["Hat","Cap","Dog"],"locations":[{"name":"San Francisco","startDate":"2023-02-15","endDate":"2023-03-11"}]},{"id":"359b402af9a1c19564435ef402efd87d","packagingList":["Hallo","Pferd"],"locations":[{"name":"Seattle","startDate":"2023-01-25","endDate":"2023-01-31"},{"name":"Chicago","startDate":"2023-02-02","endDate":"2023-02-04"}]}]'
+  '[{"id":"e26e792b84061885b9b4840be37e6525","packagingList":[],"locations":[{"name":"Berlin","startDate":"2023-01-25","endDate":"2023-01-27","lat":52.5179,"lng":13.3759,"weatherForecast":[{"temp":-1.9,"weatherCode":804,"date":"2023-01-24"},{"temp":-1.4,"weatherCode":804,"date":"2023-01-25"},{"temp":-2.3,"weatherCode":803,"date":"2023-01-26"},{"temp":-1.4,"weatherCode":610,"date":"2023-01-27"},{"temp":0.3,"weatherCode":600,"date":"2023-01-28"},{"temp":0.3,"weatherCode":600,"date":"2023-01-29"},{"temp":3.4,"weatherCode":500,"date":"2023-01-30"}]},{"name":"Malta","startDate":"2023-01-28","endDate":"2023-02-20","lat":39.648212,"lng":-81.912746,"weatherForecast":[{"temp":1.3,"weatherCode":802,"date":"2023-01-24"},{"temp":3.4,"weatherCode":610,"date":"2023-01-25"},{"temp":-0.1,"weatherCode":600,"date":"2023-01-30"},{"temp":-1.8,"weatherCode":600,"date":"2023-01-31"},{"temp":2.3,"weatherCode":610,"date":"2023-02-01"},{"temp":2.1,"weatherCode":610,"date":"2023-02-02"},{"temp":-4.3,"weatherCode":623,"date":"2023-02-03"}]}]}]'
 );
 
 /**
@@ -105,6 +105,11 @@ app.post("/api/trips", (request, response) => {
     locations: request.body.locations,
   };
 
+  // always store first location in beginning of array
+  trip.locations.sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
+
   for (let i = 0; i < trip.locations.length; i++) {
     getLocationCoords(trip.locations[i].name).then((coords) => {
       trip.locations[i].lat = coords.lat;
@@ -118,6 +123,13 @@ app.post("/api/trips", (request, response) => {
     });
   }
   tripList.push(trip);
+
+  tripList.sort(
+    (a, b) =>
+      new Date(a.locations[0].startDate).getTime() -
+      new Date(b.locations[0].startDate).getTime()
+  );
+
   response.send(trip);
 });
 
@@ -151,31 +163,6 @@ app.get("/api/weather-records/:id", (request, response) => {
   );
 
   if (!weatherData) return response.status(404).send("ID not found.");
-
-  response.send(weatherData);
-});
-
-/**
- * Route updating single weather record.
- * @name put/weather-records
- * @function
- * @param {string} path - Express path
- * @param {callback} middleware - Express middleware.
- */
-app.put("/api/weather-records/:id", (request, response) => {
-  const weatherData = weatherRecords.find(
-    (elem) => elem.id === parseInt(request.params.id)
-  );
-
-  if (!weatherData) return response.status(404).send("ID not found.");
-
-  const { error } = validateWeatherData(request.body);
-
-  if (error) return response.status(400).send(error.details[0].message);
-
-  weatherData.date = request.body.date;
-  weatherData.temperature = request.body.temperature;
-  weatherData.feelings = request.body.feelings;
 
   response.send(weatherData);
 });
@@ -239,6 +226,7 @@ async function getWeatherForecast(lat, lng) {
   if (!forecast) return null;
 
   const result = [];
+
   for (forecastDay of forecast.data) {
     const day = {};
     day.temp = forecastDay.temp;
@@ -246,7 +234,7 @@ async function getWeatherForecast(lat, lng) {
     day.date = forecastDay.valid_date;
     result.push(day);
   }
-  console.log(result);
+
   return result;
 }
 
