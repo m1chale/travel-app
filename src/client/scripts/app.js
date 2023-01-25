@@ -283,14 +283,15 @@ function createTripInformationUI(trip) {
   const packagingList = document.createElement("div");
   const items = document.createElement("ul");
 
-  const countdown = Math.round(
+  const countdown = Math.ceil(
     (new Date(trip.locations[0].startDate) - new Date()) / (1000 * 60 * 60 * 24)
   );
-  const tripLength = Math.round(
-    (new Date(trip.locations[trip.locations.length - 1].endDate) -
-      new Date(trip.locations[0].startDate)) /
-      (1000 * 60 * 60 * 24)
-  );
+  const tripLength =
+    Math.ceil(
+      (new Date(trip.locations[trip.locations.length - 1].endDate) -
+        new Date(trip.locations[0].startDate)) /
+        (1000 * 60 * 60 * 24)
+    ) + 1;
 
   tripWrapper.classList.add("trip-wrapper");
 
