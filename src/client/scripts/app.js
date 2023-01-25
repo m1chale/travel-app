@@ -5,6 +5,7 @@
 const apiTrips = require("../api/trips");
 import { getPictureAsync } from "../api/pixabay";
 import icon from "../media/weather-sunny.svg";
+import fallbackLocation from "../media/fallback-location.png";
 
 // const Trip = require("./Trip.js");
 // @ TODO import class somehow
@@ -346,7 +347,11 @@ function createLocationUI(location) {
 
   locationImage.classList.add("location-img");
   getPictureAsync(location.name).then((result) => {
-    locationImage.src = result;
+    if (result) {
+      locationImage.src = result;
+    } else {
+      locationImage.src = fallbackLocation;
+    }
   });
 
   locationWrapper.appendChild(locationImage);
@@ -395,10 +400,12 @@ function createLocationUI(location) {
     weatherIcon.src = icon;
     dayWrapper.appendChild(weatherIcon);
 
-    for (const forecastDay of location.weatherForecast) {
-      if (startDate.getTime() == new Date(forecastDay.date).getTime()) {
-        temperature.innerText = forecastDay.temp + "°C";
-        break;
+    if (location.weatherForecast) {
+      for (const forecastDay of location.weatherForecast) {
+        if (startDate.getTime() == new Date(forecastDay.date).getTime()) {
+          temperature.innerText = forecastDay.temp + "°C";
+          break;
+        }
       }
     }
 
