@@ -444,7 +444,9 @@ function getWeatherIcon(code) {
  * export Trip to PDF
  * @param {Event} event
  */
-function exportTripClick(event) {}
+function exportTripClick(event) {
+  console.log("not implemented yet");
+}
 
 /**
  * remove Trip from UI and database
