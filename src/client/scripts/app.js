@@ -4,6 +4,8 @@
 
 const apiTrips = require("../api/trips");
 import { getPictureAsync } from "../api/pixabay";
+
+import logoIcon from "../media/world.svg";
 import icon from "../media/weather-sunny.svg";
 import fallbackLocation from "../media/fallback-location.png";
 
@@ -86,6 +88,9 @@ async function getWeatherHistoryData(url) {
  */
 function initApp(event) {
   refreshTripList();
+
+  const logo = document.querySelector(".logo").querySelector("img");
+  logo.src = logoIcon;
 
   const addLocation = document.getElementById("add-location");
   const addItem = document.getElementById("add-item");
