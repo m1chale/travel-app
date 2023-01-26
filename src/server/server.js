@@ -65,7 +65,7 @@ app.use(cors());
 app.use(express.static("dist"));
 
 // Setup Server
-export const server = app.listen(port, listening);
+const server = app.listen(port, listening);
 
 function listening() {
   console.log(`Server is up and listening on port: ${port} ...`);
@@ -133,7 +133,7 @@ async function createTrip(requestData) {
   return trip;
 }
 
-export function handleRequest(requestData) {
+function handleRequest(requestData) {
   const trip = {
     id: crypto.randomBytes(16).toString("hex"),
     packagingList: requestData.packagingList,
@@ -279,3 +279,5 @@ async function fetchForecastWeatherBitApi(lat, lng) {
     console.log("There was an error", error);
   }
 }
+
+module.exports = { server, handleRequest };
