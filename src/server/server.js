@@ -65,7 +65,7 @@ app.use(cors());
 app.use(express.static("dist"));
 
 // Setup Server
-app.listen(port, listening);
+export const server = app.listen(port, listening);
 
 function listening() {
   console.log(`Server is up and listening on port: ${port} ...`);
@@ -112,16 +112,7 @@ app.post("/api/trips", (request, response) => {
 });
 
 async function createTrip(requestData) {
-  const trip = {
-    id: crypto.randomBytes(16).toString("hex"),
-    packagingList: requestData.packagingList,
-    locations: requestData.locations,
-  };
-
-  // always store first location in beginning of array
-  trip.locations.sort(
-    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-  );
+  const trip = handleRequest(requestData);
 
   for (let i = 0; i < trip.locations.length; i++) {
     const coords = await getLocationCoords(trip.locations[i].name);
@@ -138,6 +129,21 @@ async function createTrip(requestData) {
 
     trip.locations[i].weatherForecast = weatherForecast;
   }
+
+  return trip;
+}
+
+export function handleRequest(requestData) {
+  const trip = {
+    id: crypto.randomBytes(16).toString("hex"),
+    packagingList: requestData.packagingList,
+    locations: requestData.locations,
+  };
+
+  // always store first location in beginning of array
+  trip.locations.sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
 
   return trip;
 }

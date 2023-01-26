@@ -44,43 +44,6 @@ class Trip {
  */
 
 /**
- * Request weatherData from openWeather
- * @param {string} zip Zip code from city from which the weatherData will be requested
- * @returns {number} current temperature of requested zip-code
- */
-async function getTemperature(zip) {
-  const units = "metric";
-  const url = `/api/open-weather-forwarder/${zip}/${units}`;
-  try {
-    const apiRes = await fetch(url);
-
-    if (apiRes?.ok) {
-      const weatherData = await apiRes.json();
-      if (weatherData) return weatherData.main.temp;
-    } else throw new Error(`HTTP Code: ${apiRes?.status}`);
-  } catch (error) {
-    console.log("There was an error", error);
-  }
-}
-
-/**
- * Gets the weather history data from the server
- * @returns {Array<object>} weather history
- */
-async function getWeatherHistoryData(url) {
-  try {
-    const apiRes = await fetch(url);
-
-    if (apiRes?.ok) {
-      const weatherHistory = await apiRes.json();
-      if (weatherHistory) return weatherHistory;
-    } else throw new Error(`HTTP Code: ${apiRes?.status}`);
-  } catch (error) {
-    console.log("There was an error", error);
-  }
-}
-
-/**
  * End Helper Functions
  *
  * ****************************************************
@@ -157,7 +120,7 @@ function addItemKeypress(event) {
  * @param {object} packagingList
  * @param {string} item
  */
-function checkForDuplicateItem(packagingList, item) {
+export function checkForDuplicateItem(packagingList, item) {
   for (const listElem of packagingList.childNodes) {
     if (listElem.innerHTML == item) return false;
   }
