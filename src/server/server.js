@@ -215,10 +215,15 @@ async function getLocationCoords(locationName) {
 }
 
 async function fetchGeoNamesApi(locationName) {
-  const url = `http://api.geonames.org/postalCodeSearchJSON?placename=${locationName}&username=_m1chael`;
+  const url = `http://api.geonames.org/postalCodeSearchJSON?`;
+
+  const urlParams = new URLSearchParams({
+    username: "_m1chael",
+    placename: locationName,
+  });
 
   try {
-    const apiRes = await fetch(url);
+    const apiRes = await fetch(url + urlParams);
 
     if (apiRes?.ok) {
       const locationData = await apiRes.json();
@@ -248,10 +253,17 @@ async function getWeatherForecast(lat, lng) {
 }
 
 async function fetchForecastWeatherBitApi(lat, lng) {
-  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lng}&days=16&key=6a0b38e6c8aa455fb0937f561344e923`;
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?`;
+
+  const urlParams = new URLSearchParams({
+    key: "6a0b38e6c8aa455fb0937f561344e923",
+    lat: lat,
+    lon: lng,
+    days: "16",
+  });
 
   try {
-    const apiRes = await fetch(url);
+    const apiRes = await fetch(url + urlParams);
 
     if (apiRes?.ok) {
       const forecastData = await apiRes.json();
