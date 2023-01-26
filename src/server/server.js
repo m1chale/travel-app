@@ -28,10 +28,7 @@ const crypto = require("crypto");
  * @type {object}
  * @const
  */
-// const tripList = [];
-const tripList = JSON.parse(
-  '[{"id":"e26e792b84061885b9b4840be37e6525","packagingList":[],"locations":[{"name":"Berlin","startDate":"2023-01-25","endDate":"2023-01-27","lat":52.5179,"lng":13.3759,"weatherForecast":[{"temp":-1.9,"weatherCode":804,"date":"2023-01-24"},{"temp":-1.4,"weatherCode":804,"date":"2023-01-25"},{"temp":-2.3,"weatherCode":803,"date":"2023-01-26"},{"temp":-1.4,"weatherCode":610,"date":"2023-01-27"},{"temp":0.3,"weatherCode":600,"date":"2023-01-28"},{"temp":0.3,"weatherCode":600,"date":"2023-01-29"},{"temp":3.4,"weatherCode":500,"date":"2023-01-30"}]},{"name":"Malta","startDate":"2023-01-28","endDate":"2023-02-20","lat":39.648212,"lng":-81.912746,"weatherForecast":[{"temp":1.3,"weatherCode":802,"date":"2023-01-24"},{"temp":3.4,"weatherCode":610,"date":"2023-01-25"},{"temp":-0.1,"weatherCode":600,"date":"2023-01-30"},{"temp":-1.8,"weatherCode":600,"date":"2023-01-31"},{"temp":2.3,"weatherCode":610,"date":"2023-02-01"},{"temp":2.1,"weatherCode":610,"date":"2023-02-02"},{"temp":-4.3,"weatherCode":623,"date":"2023-02-03"}]}]}]'
-);
+const tripList = [];
 
 /**
  * ****************************************************
@@ -44,7 +41,17 @@ dotenv.config({ path: "config/.env" });
  * Define environment
  */
 const port = process.env.PORT || 8080;
-const apiKey = process.env.API_KEY;
+const apiCredentials = {
+  geoNames: {
+    url: "http://api.geonames.org/postalCodeSearchJSON?",
+    key: process.env.GEONAMES_API_KEY,
+  },
+  weatherBit: {
+    url: "https://api.weatherbit.io/v2.0/forecast/daily?",
+    key: process.env.WEATHERBIT_API_KEY,
+  },
+  pixaBay: { url: "", key: process.env.PIXABAY_API_KEY },
+};
 
 /**
  * ****************************************************
@@ -221,15 +228,13 @@ async function getLocationCoords(locationName) {
 }
 
 async function fetchGeoNamesApi(locationName) {
-  const url = `http://api.geonames.org/postalCodeSearchJSON?`;
-
   const urlParams = new URLSearchParams({
-    username: "_m1chael",
+    username: apiCredentials.geoNames.key,
     placename: locationName,
   });
 
   try {
-    const apiRes = await fetch(url + urlParams);
+    const apiRes = await fetch(apiCredentials.geoNames.url + urlParams);
 
     if (apiRes?.ok) {
       const locationData = await apiRes.json();
@@ -259,17 +264,15 @@ async function getWeatherForecast(lat, lng) {
 }
 
 async function fetchForecastWeatherBitApi(lat, lng) {
-  const url = `https://api.weatherbit.io/v2.0/forecast/daily?`;
-
   const urlParams = new URLSearchParams({
-    key: "6a0b38e6c8aa455fb0937f561344e923",
+    key: apiCredentials.weatherBit.key,
     lat: lat,
     lon: lng,
     days: "16",
   });
 
   try {
-    const apiRes = await fetch(url + urlParams);
+    const apiRes = await fetch(apiCredentials.weatherBit.url + urlParams);
 
     if (apiRes?.ok) {
       const forecastData = await apiRes.json();

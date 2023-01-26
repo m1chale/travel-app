@@ -20,6 +20,13 @@ You need to have nodejs installad.
 
 If you want to use the documentation, then you need to install JSdoc.
 
+Create a .env file inside config/ in the following way
+
+    PIXABAY_API_KEY=1234567890
+    GEONAMES_API_KEY=123456
+    WEATHERBIT_API_KEY=1234567890
+    PORT=8090
+
 ## Dependencies
 
 - Routehandling: express
