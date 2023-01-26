@@ -4,6 +4,7 @@
 
 const apiTrips = require("../api/trips");
 import { getPictureAsync } from "../api/pixabay";
+import { Trip } from "./Trip";
 
 import logoIcon from "../media/world.svg";
 
@@ -13,23 +14,6 @@ import weatherSunny from "../media/weather-sunny.svg";
 import weatherRainy from "../media/weather-rainy.svg";
 import weatherSnowy from "../media/weather-snowy.svg";
 import weatherStormy from "../media/weather-stormy.svg";
-
-// const Trip = require("./Trip.js");
-// @ TODO import class somehow
-class Trip {
-  constructor() {
-    this.locations = [];
-    this.packagingList = [];
-  }
-
-  setPackagingList(list) {
-    this.packagingList = [...list];
-  }
-
-  addLocation(location) {
-    this.locations.push(location);
-  }
-}
 
 /**
  * ****************************************************
