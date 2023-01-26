@@ -9,7 +9,7 @@ $field-background: #8d90ef;
 $primary-font: "Italianno";
 $secondary-font: "Jura";
 
-$input-elements: 'input[type="text"], input[type="date"]';
+$input-elements: 'input[type="text"], input[type="date"], .text';
 $input-elements-hover: 'input[type="text"]:hover, input[type="date"]:hover';
 
 /*** Mixins ***/
