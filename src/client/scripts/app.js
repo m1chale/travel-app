@@ -91,7 +91,7 @@ async function getWeatherHistoryData(url) {
  * initializing
  * @param {Event} event
  */
-function initApp(event) {
+export function initApp(event) {
   refreshTripList();
 
   const logo = document.querySelector(".logo").querySelector("img");
