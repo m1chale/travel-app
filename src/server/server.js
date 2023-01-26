@@ -99,10 +99,23 @@ app.post("/api/trips", (request, response) => {
 
   if (error) return response.status(400).send(error.details[0].message);
 
+  createTrip(request.body).then((trip) => {
+    tripList.push(trip);
+    tripList.sort(
+      (a, b) =>
+        new Date(a.locations[0].startDate).getTime() -
+        new Date(b.locations[0].startDate).getTime()
+    );
+
+    response.send(trip);
+  });
+});
+
+async function createTrip(requestData) {
   const trip = {
     id: crypto.randomBytes(16).toString("hex"),
-    packagingList: request.body.packagingList,
-    locations: request.body.locations,
+    packagingList: requestData.packagingList,
+    locations: requestData.locations,
   };
 
   // always store first location in beginning of array
@@ -111,27 +124,23 @@ app.post("/api/trips", (request, response) => {
   );
 
   for (let i = 0; i < trip.locations.length; i++) {
-    getLocationCoords(trip.locations[i].name).then((coords) => {
-      trip.locations[i].lat = coords.lat;
-      trip.locations[i].lng = coords.lng;
+    const coords = await getLocationCoords(trip.locations[i].name);
 
-      getWeatherForecast(trip.locations[i].lat, trip.locations[i].lng).then(
-        (weatherForecast) => {
-          trip.locations[i].weatherForecast = weatherForecast;
-        }
-      );
-    });
+    if (!coords) continue;
+
+    trip.locations[i].lat = coords.lat;
+    trip.locations[i].lng = coords.lng;
+
+    const weatherForecast = await getWeatherForecast(
+      trip.locations[i].lat,
+      trip.locations[i].lng
+    );
+
+    trip.locations[i].weatherForecast = weatherForecast;
   }
-  tripList.push(trip);
 
-  tripList.sort(
-    (a, b) =>
-      new Date(a.locations[0].startDate).getTime() -
-      new Date(b.locations[0].startDate).getTime()
-  );
-
-  response.send(trip);
-});
+  return trip;
+}
 
 /**
  * Route deleting single trip record.
@@ -197,7 +206,7 @@ function validateTrip(trip) {
 async function getLocationCoords(locationName) {
   const locationGeo = await fetchGeoNamesApi(locationName);
 
-  if (!locationGeo) return null;
+  if (!locationGeo || locationGeo.postalCodes.length == 0) return null;
 
   const result = {};
   result.lat = locationGeo.postalCodes[0].lat;
