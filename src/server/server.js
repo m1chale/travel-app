@@ -50,7 +50,10 @@ const apiCredentials = {
     url: "https://api.weatherbit.io/v2.0/forecast/daily?",
     key: process.env.WEATHERBIT_API_KEY,
   },
-  pixaBay: { url: "", key: process.env.PIXABAY_API_KEY },
+  pixaBay: {
+    url: "https://pixabay.com/api/?",
+    key: process.env.PIXABAY_API_KEY,
+  },
 };
 
 /**
@@ -90,12 +93,23 @@ function listening() {
  * @param {string} path - Express path
  * @param {callback} middleware - Express middleware.
  */
+app.get("/api/pixabay", (request, response) => {
+  response.send(apiCredentials.pixaBay);
+});
+
+/**
+ * Route serving trip data.
+ * @name get/trips
+ * @function
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 app.get("/api/trips", (request, response) => {
   response.send(tripList);
 });
 
 /**
- * Route accepting single weather record.
+ * Route accepting single trip record.
  * @name post/trips
  * @function
  * @param {string} path - Express path

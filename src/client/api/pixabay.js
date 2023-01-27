@@ -1,21 +1,16 @@
-// const dotenv = require("dotenv");
-
-// dotenv.config();
-
-const url = "https://pixabay.com/api/?";
-
-// const apiKey = process.env.API_KEY;
-const apiKey = "27910411-fb49b209c8dd892f919329325";
+const url = "http://localhost:8090/api/pixabay";
 
 export async function getPictureAsync(keyword) {
+  const apiCredentials = await getApiCredentials();
+
   const urlParams = new URLSearchParams({
-    key: apiKey,
+    key: apiCredentials.key,
     image_type: "photo",
     category: "city",
     q: keyword,
   });
 
-  const response = await fetch(url + urlParams.toString());
+  const response = await fetch(apiCredentials.url + urlParams.toString());
 
   const resJson = await response.json();
 
@@ -24,4 +19,13 @@ export async function getPictureAsync(keyword) {
   } else {
     return "";
   }
+}
+
+/**
+ * get all trips from server
+ * @returns {Array} server trip records
+ */
+async function getApiCredentials() {
+  const response = await fetch(url);
+  return response.json();
 }

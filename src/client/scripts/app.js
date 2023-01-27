@@ -304,6 +304,7 @@ function createLocationUI(location) {
   locationWrapper.appendChild(locationHeading);
 
   locationImage.classList.add("location-img");
+
   getPictureAsync(location.name).then((result) => {
     if (result) {
       locationImage.src = result;
