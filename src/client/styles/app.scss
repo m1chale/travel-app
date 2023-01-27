@@ -30,7 +30,7 @@ $input-elements-hover: 'input[type="text"]:hover, input[type="date"]:hover';
 
 body {
   font-family: $primary-font;
-  font-size: 64px;
+  font-size: 44px;
   color: white;
   background: $background-color;
 }
@@ -84,7 +84,7 @@ body {
   gap: 30px;
   h1 {
     padding-top: 8px;
-    font-size: 128px;
+    font-size: 100px;
     color: $secondary-color;
     font-weight: normal;
   }
@@ -96,7 +96,7 @@ nav {
   gap: 60px;
 
   a {
-    font-size: 75px;
+    font-size: 55px;
     color: white;
     text-decoration: none;
   }
@@ -230,6 +230,45 @@ input[type="button"]:hover {
 }
 
 .location-img {
-  max-width: 45%;
+  max-width: 65%;
   border-radius: 25px;
+}
+
+$small: 781px;
+$medium: 1215px;
+/* tablet screens  */
+@media screen and (max-width: $medium) {
+  .row {
+    flex-direction: column;
+  }
+  .layout-wrapper {
+    grid-template-rows: 220px 1fr 50px;
+
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    main {
+      padding: 25px;
+    }
+  }
+
+  .logo {
+    h1 {
+      padding-top: 8px;
+      font-size: 75px;
+      color: $secondary-color;
+      font-weight: normal;
+    }
+  }
+
+  nav {
+    gap: 30px;
+  }
+
+  .location-img {
+    max-width: 85%;
+  }
 }
