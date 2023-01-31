@@ -47,14 +47,11 @@ export function initApp(event) {
   const addLocation = document.getElementById("add-location");
   const addItem = document.getElementById("add-item");
   const saveTrip = document.getElementById("save-trip");
-  const exportTrip = document.getElementById("export-trip");
   const cancelTrip = document.getElementById("cancel-trip");
 
   addLocation.addEventListener("click", addLocationClick);
   addItem.addEventListener("keypress", addItemKeypress);
   saveTrip.addEventListener("click", saveTripClick);
-  exportTrip.addEventListener("click", exportTripClick);
-  cancelTrip.addEventListener("click", cancelTripClick);
 }
 
 /**
@@ -388,20 +385,6 @@ function getWeatherIcon(code) {
     return weatherSunny;
   }
 }
-
-/**
- * export Trip to PDF
- * @param {Event} event
- */
-function exportTripClick(event) {
-  console.log("not implemented yet");
-}
-
-/**
- * remove Trip from UI and database
- * @param {Event} event
- */
-function cancelTripClick(event) {}
 
 /**
  * End Main Functions
