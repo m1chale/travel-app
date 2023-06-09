@@ -14,6 +14,7 @@ import weatherSunny from "../media/weather-sunny.svg";
 import weatherRainy from "../media/weather-rainy.svg";
 import weatherSnowy from "../media/weather-snowy.svg";
 import weatherStormy from "../media/weather-stormy.svg";
+import { DateTime } from "@code-on-the-rocks/ts-datetime";
 
 /**
  * ****************************************************
@@ -48,6 +49,9 @@ export function initApp(event) {
   const addItem = document.getElementById("add-item");
   const saveTrip = document.getElementById("save-trip");
   const cancelTrip = document.getElementById("cancel-trip");
+
+  const test = document.getElementById("testme");
+  test.innerHTML = DateTime.now().toHumanReadableString();
 
   addLocation.addEventListener("click", addLocationClick);
   addItem.addEventListener("keypress", addItemKeypress);

@@ -1,81 +1,95 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Traverlo Planning App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Jura&display=swap" rel="stylesheet">
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Italianno&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jura&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="layout-wrapper">
-        <header>
-            <div class="logo">
-                <img />
-                <h1>Traverlo</h1>
+      <header>
+        <div class="logo">
+          <img />
+          <h1>Traverlo</h1>
+        </div>
+        <h1 id="testme"></h1>
+        <nav>
+          <a href="./index.html">Home</a>
+          <a href="./index.html">Planner</a>
+          <a href="./index.html">About</a>
+        </nav>
+      </header>
+      <main>
+        <section class="input-wrapper">
+          <h2>Add new trip</h2>
+
+          <form class="input-form">
+            <div class="row fields">
+              <label class="field-wrapper">
+                Location
+                <input
+                  class="text"
+                  placeholder="Enter location..."
+                  type="text"
+                />
+              </label>
+
+              <label class="field-wrapper">
+                Start Date
+                <input type="date" />
+              </label>
+
+              <label class="field-wrapper">
+                End Date
+                <input type="date" />
+              </label>
             </div>
-            <nav>
-                <a href="./index.html">Home</a>
-                <a href="./index.html">Planner</a>
-                <a href="./index.html">About</a>
-            </nav>
-        </header>
-        <main>
-            <section class="input-wrapper">
-                <h2>Add new trip</h2>
 
-                <form class="input-form">
-                    <div class="row fields">
-                        <label class="field-wrapper">
-                            Location
-                            <input class="text" placeholder="Enter location..." type="text" />
-                        </label>
+            <div class="row">
+              <input type="button" id="add-location" value="+" />
+            </div>
 
-                        <label class="field-wrapper">
-                            Start Date
-                            <input type="date" />
-                        </label>
+            <div class="row">
+              <div class="field-wrapper">
+                <label for="add-item">Add item</label>
+                <input
+                  class="text"
+                  id="add-item"
+                  placeholder="Add item..."
+                  type="text"
+                />
+              </div>
 
-                        <label class="field-wrapper">
-                            End Date
-                            <input type="date" />
-                        </label>
-                    </div>
-
-                    <div class="row">
-                        <input type="button" id="add-location" value="+" />
-                    </div>
-
-                    <div class="row">
-                        <div class="field-wrapper">
-                            <label for="add-item">Add item</label>
-                            <input class="text" id="add-item" placeholder="Add item..." type="text" />
-                        </div>
-
-                        <div class="field-wrapper">
-                            <label for="packaging-list">Packaging list</label>
-                            <ul id="packaging-list" class="list"></ul>
-                        </div>
-                    </div>
-                    <input type="button" id="save-trip" value="Save trip" />
-                </form>
-            </section>
-        </main>
-        <footer>
-            <span>Made with ❤️ by Webelephant</span>
-        </footer>
+              <div class="field-wrapper">
+                <label for="packaging-list">Packaging list</label>
+                <ul id="packaging-list" class="list"></ul>
+              </div>
+            </div>
+            <input type="button" id="save-trip" value="Save trip" />
+          </form>
+        </section>
+      </main>
+      <footer>
+        <span>Made with ❤️ by Webelephant</span>
+      </footer>
     </div>
     <script>
-        // Check that service workers are supported
-        if ('serviceWorker' in navigator) {
-            // Use the window load event to keep the page load performant
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
-            });
-        }
+      // Check that service workers are supported
+      if ("serviceWorker" in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("/service-worker.js");
+        });
+      }
     </script>
-</body>
-
+  </body>
 </html>
